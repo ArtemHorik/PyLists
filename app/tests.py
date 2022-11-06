@@ -1,3 +1,10 @@
 from django.test import TestCase
 
-# Create your tests here.
+
+class SmokeTest(TestCase):
+    """Tests for toxicity"""
+
+    def test_bad_maths(self):
+        """Test wrong math answers"""
+        self.assertEqual(1 + 1, 3)
+
