@@ -18,7 +18,7 @@ class NewVisitorTest(unittest.TestCase):
         """Start a list and receive"""
         self.browser.get(self.base_url)
         # we see To Do title and header
-        self.assertIn("To Do", self.browser.title)
+        self.assertIn("To-Do", self.browser.title)
         self.fail("Stop test!")
 
 
