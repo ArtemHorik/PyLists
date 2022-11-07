@@ -42,15 +42,15 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
 
-        self.check_for_row_in_list_table("Apply to a job")
+        self.check_for_row_in_list_table("1: Apply to a job")
         # we enter another item - "Go to lectures"
         inputbox = self.browser.find_element(By.ID, 'id_new_item')
         inputbox.send_keys("Go to lectures")
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
         # now we see both elements in list
-        self.check_for_row_in_list_table("Apply to a job")
-        self.check_for_row_in_list_table("Go to lectures")
+        self.check_for_row_in_list_table("1: Apply to a job")
+        self.check_for_row_in_list_table("2: Go to lectures")
 
         self.fail("Stop test!")
 
