@@ -24,7 +24,7 @@ class NewVisitorTest(unittest.TestCase):
         self.assertIn("To-Do", self.browser.title)
         header_text = self.browser.find_element(By.TAG_NAME, 'h1').text
         print(header_text)
-        self.assertEqual("To-Do", header_text)
+        self.assertEqual("Your To-Do list", header_text)
         # enter the list element
         inputbox = self.browser.find_element(By.ID, 'id_new_item')
         self.assertEqual(
@@ -38,9 +38,13 @@ class NewVisitorTest(unittest.TestCase):
 
         table = self.browser.find_element(By.ID, 'id_list_table')
         rows = table.find_elements(By.TAG_NAME, 'tr')
-        self.assertTrue(
-            any(row.text == '1: Apply to a job' for row in rows)
-        )
+        self.assertIn("1: Apply to a job", [row.text for row in rows])
+        # we enter another item - "Go to lectures"
+        inputbox.send_keys("Go to lectures")
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        self.assertIn("2: Go to lectures", [row.text for row in rows])
         # we see the new item in the list
         self.fail("Stop test!")
 
