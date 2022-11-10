@@ -19,26 +19,36 @@ class HomePageTest(TestCase):
         new_item = Item.objects.first()
         self.assertEqual(new_item.text, 'A new list item')
 
-    def test_redirects_after_post(self):
+    def test_redirects_after_POST(self):
         """test: redirects after a POST request"""
         response = self.client.post('/', data={'item_text': 'A new list item'})
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['Location'], '/')
+        self.assertEqual(response['Location'], '/lists/unique-list/')
 
     def test_only_saves_items_when_necessary(self):
         """test: only saves items when necessary"""
         self.client.get('/')
         self.assertEqual(Item.objects.count(), 0)
 
-    def test_displays_all_list_items(self):
-        """test: displays all list items"""
+
+class ListViewTest(TestCase):
+    """ListView test"""
+
+    def test_uses_list_template(self):
+        """test: uses list template"""
+        response = self.client.get('/lists/unique-list/')
+        self.assertTemplateUsed(response, 'list.html')
+
+    def test_displays_all_items(self):
+        """test: displays all items"""
         Item.objects.create(text='item 1')
         Item.objects.create(text='item 2')
 
-        response = self.client.get('/')
+        response = self.client.get('/lists/unique-list/')
 
-        self.assertIn('item 1', response.content.decode())
-        self.assertIn('item 2', response.content.decode())
+        self.assertContains(response, 'item 1')
+        self.assertContains(response, 'item 2')
+
 
 
 class ItemModelTest(TestCase):
