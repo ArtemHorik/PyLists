@@ -1,17 +1,18 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from django.test import LiveServerTestCase
 import time
 import unittest
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     """NewVisitor Test"""
 
     def setUp(self):
         """Set up"""
         self.browser = webdriver.Edge()
-        self.base_url = "http://localhost:8000"
+        self.base_url = self.live_server_url
 
     def tearDown(self):
         """Tear down"""
@@ -53,7 +54,3 @@ class NewVisitorTest(unittest.TestCase):
         self.check_for_row_in_list_table("2: Go to lectures")
 
         self.fail("Stop test!")
-
-
-if __name__ == "__main__":
-    unittest.main(warnings='ignore')
