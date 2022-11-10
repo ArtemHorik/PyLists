@@ -47,7 +47,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn("To-Do", self.browser.title)
         header_text = self.browser.find_element(By.TAG_NAME, 'h1').text
         print(header_text)
-        self.assertEqual("Your To-Do list", header_text)
+        self.assertEqual("Start a new To-Do list", header_text)
         # enter the list element
         input_box = self.browser.find_element(By.ID, 'id_new_item')
         self.assertEqual(
