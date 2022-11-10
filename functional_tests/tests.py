@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import WebDriverException
+
 from django.test import LiveServerTestCase
 import time
 import unittest
@@ -8,6 +10,7 @@ import unittest
 
 class NewVisitorTest(LiveServerTestCase):
     """NewVisitor Test"""
+    MAX_WAIT = 10
 
     def setUp(self):
         """Set up"""
@@ -18,39 +21,80 @@ class NewVisitorTest(LiveServerTestCase):
         """Tear down"""
         self.browser.quit()
 
-    def check_for_row_in_list_table(self, row_text):
-        """Check for row in list table"""
-        table = self.browser.find_element(By.ID, 'id_list_table')
-        rows = table.find_elements(By.TAG_NAME, 'tr')
-        self.assertIn(row_text, [row.text for row in rows])
+    def create_list_item(self, text):
+        input_box = self.browser.find_element(By.ID, 'id_new_item')
+        input_box.send_keys(text)
+        input_box.send_keys(Keys.ENTER)
 
-    def test_start_a_list_and_receive_it_later(self):
+    def wait_for_row_in_list_table(self, row_text):
+        """Check for row in list table"""
+        start_time = time.time()
+        while True:
+            try:
+                table = self.browser.find_element(By.ID, 'id_list_table')
+                rows = table.find_elements(By.TAG_NAME, 'tr')
+                self.assertIn(row_text, [row.text for row in rows])
+                return
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > self.MAX_WAIT:
+                    raise e
+                time.sleep(0.5)
+
+    def test_can_start_a_list_for_one_user(self):
         """Start a list and receive"""
-        self.browser.get(self.base_url)
+        self.browser.get(self.live_server_url)
         # we see To Do title and header
         self.assertIn("To-Do", self.browser.title)
         header_text = self.browser.find_element(By.TAG_NAME, 'h1').text
         print(header_text)
         self.assertEqual("Your To-Do list", header_text)
         # enter the list element
-        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        input_box = self.browser.find_element(By.ID, 'id_new_item')
         self.assertEqual(
-            inputbox.get_attribute('placeholder'),
+            input_box.get_attribute('placeholder'),
             "Enter a to-do item"
         )
         # we enter the new item "apply to a job" in the input box
-        inputbox.send_keys("Apply to a job")
-        inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
+        self.create_list_item("Apply to a job")
 
-        self.check_for_row_in_list_table("1: Apply to a job")
+        self.wait_for_row_in_list_table("1: Apply to a job")
         # we enter another item - "Go to lectures"
-        inputbox = self.browser.find_element(By.ID, 'id_new_item')
-        inputbox.send_keys("Go to lectures")
-        inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
+        self.create_list_item("Go to lectures")
         # now we see both elements in list
-        self.check_for_row_in_list_table("1: Apply to a job")
-        self.check_for_row_in_list_table("2: Go to lectures")
+        self.wait_for_row_in_list_table("1: Apply to a job")
+        self.wait_for_row_in_list_table("2: Go to lectures")
 
         self.fail("Stop test!")
+
+    def test_multiple_users_can_start_lists_at_different_urls(self):
+        """test: Multiple users can start lists at different urls"""
+        # first user
+        self.browser.get(self.live_server_url)
+        self.create_list_item("Go to lectures")
+        self.wait_for_row_in_list_table("1: Go to lectures")
+        # we see that our list has unique url
+        first_user_url = self.browser.current_url
+        self.assertRegex(first_user_url, '/lists/.+')
+
+        # second user
+        self.browser.quit()
+        self.browser = webdriver.Edge()
+
+        # we don't see previous list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element(By.TAG_NAME, 'body').text
+        self.assertNotIn('Go to lectures', page_text)
+
+        # we make a new list
+        self.create_list_item("Buy milk")
+        self.wait_for_row_in_list_table("1: Buy milk")
+
+        # second user gets unique url
+        second_user_url = self.browser.current_url
+        self.assertRegex(second_user_url, '/lists/.+')
+        self.assertNotEqual(first_user_url, second_user_url)
+
+        # nothing from first user
+        page_text = self.browser.find_element(By.TAG_NAME, 'body').text
+        self.assertNotIn('Go to lectures', page_text)
+        self.assertIn("Buy milk", page_text)
