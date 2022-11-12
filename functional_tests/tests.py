@@ -5,7 +5,7 @@ from selenium.common.exceptions import WebDriverException
 
 from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-import time
+import time, os
 import unittest
 
 
@@ -16,7 +16,9 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def setUp(self):
         """Set up"""
         self.browser = webdriver.Edge()
-        self.base_url = self.live_server_url
+        staging_server = os.environ.get('STAGING_SERVER')
+        if staging_server:
+            self.live_server_url = 'http://' + staging_server
 
     def tearDown(self):
         """Tear down"""
