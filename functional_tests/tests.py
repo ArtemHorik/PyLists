@@ -4,11 +4,12 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
 
 from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import time
 import unittest
 
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
     """NewVisitor Test"""
     MAX_WAIT = 10
 
@@ -64,8 +65,6 @@ class NewVisitorTest(LiveServerTestCase):
         self.wait_for_row_in_list_table("1: Apply to a job")
         self.wait_for_row_in_list_table("2: Go to lectures")
 
-        self.fail("Stop test!")
-
     def test_multiple_users_can_start_lists_at_different_urls(self):
         """test: Multiple users can start lists at different urls"""
         # first user
@@ -110,5 +109,5 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertAlmostEqual(
             input_box.location['x'] + input_box.size['width'] / 2,
             512,
-            delta=10
+            delta=30
         )

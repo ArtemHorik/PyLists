@@ -1,10 +1,38 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'app/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'app/base.css' %}">
+    <title>To-Do lists</title>
 </head>
-<body>
-$END$
+<body class="bg-light">
+<div class="container">
+
+    <div class="row my-5">
+        <div class="col-lg-8 offset-lg-2 centered text-bg-dark">
+            <div class="text-center centered">
+                <h1 class="text ">{% block header_text %}{% endblock %}</h1>
+                <form method="post" action="{% block form_action %}{% endblock %}">
+                    <label for="id_new_item"></label>
+                    <input name="item_text" id="id_new_item"
+                           class="form-control-sm input-sm w-50 border-info"
+                           placeholder="Enter a to-do item"/>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row my-3 mx-1">
+        <div class="col-md-8 offset-md-2 p-lg-0">
+            {% block table %}
+            {% endblock %}
+        </div>
+    </div>
+
+</div>
 </body>
 </html>
