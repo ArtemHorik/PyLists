@@ -122,7 +122,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://artemhorik.site',
     'https://artemhorik.site',
+    'http://artemhorik.site',
 ]
 
