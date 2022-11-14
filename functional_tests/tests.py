@@ -113,3 +113,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
             512,
             delta=30
         )
+
+    def test_cannot_add_empty_list_items(self):
+        """test cannot add empty list items"""
+        self.fail("Write me!!")
