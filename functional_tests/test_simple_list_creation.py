@@ -1,47 +1,11 @@
+from .base import FunctionalTest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import WebDriverException
-
-from django.test import LiveServerTestCase
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-import time, os
-import unittest
 
 
-class NewVisitorTest(StaticLiveServerTestCase):
+class NewVisitorTest(FunctionalTest):
     """NewVisitor Test"""
-    MAX_WAIT = 10
-
-    def setUp(self):
-        """Set up"""
-        self.browser = webdriver.Edge()
-        staging_server = os.environ.get('STAGING_SERVER')
-        if staging_server:
-            self.live_server_url = 'http://' + staging_server
-
-    def tearDown(self):
-        """Tear down"""
-        self.browser.quit()
-
-    def create_list_item(self, text):
-        input_box = self.browser.find_element(By.ID, 'id_new_item')
-        input_box.send_keys(text)
-        input_box.send_keys(Keys.ENTER)
-
-    def wait_for_row_in_list_table(self, row_text):
-        """Check for row in list table"""
-        start_time = time.time()
-        while True:
-            try:
-                table = self.browser.find_element(By.ID, 'id_list_table')
-                rows = table.find_elements(By.TAG_NAME, 'tr')
-                self.assertIn(row_text, [row.text for row in rows])
-                return
-            except (AssertionError, WebDriverException) as e:
-                if time.time() - start_time > self.MAX_WAIT:
-                    raise e
-                time.sleep(0.5)
 
     def test_can_start_a_list_for_one_user(self):
         """Start a list and receive"""
@@ -100,20 +64,3 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.assertNotIn('Go to lectures', page_text)
         self.assertIn("Buy milk", page_text)
 
-    def test_layout_and_styling(self):
-        """test layout and styling"""
-        # we open home page
-        self.browser.get(self.live_server_url)
-        self.browser.set_window_size(1024, 768)
-
-        # input box is perfectly centered
-        input_box = self.browser.find_element(By.ID, 'id_new_item')
-        self.assertAlmostEqual(
-            input_box.location['x'] + input_box.size['width'] / 2,
-            512,
-            delta=30
-        )
-
-    def test_cannot_add_empty_list_items(self):
-        """test cannot add empty list items"""
-        self.fail("Write me!!")
