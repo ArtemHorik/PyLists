@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from .models import Item, List
+from app.models import Item, List
 
 
 class HomePageTest(TestCase):
