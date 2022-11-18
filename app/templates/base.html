@@ -22,9 +22,9 @@
                            placeholder="Enter a to-do item"/>
                     {% csrf_token %}
                     {% if error %}
-                    <div class="has-error">
-                        <span class="help-block">{{ error }}</span>
-                    </div>
+                        <div class="text-info has-error">
+                        You can't have an empty list item
+                        </div>
                     {% endif %}
                 </form>
             </div>
