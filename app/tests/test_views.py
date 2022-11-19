@@ -1,7 +1,7 @@
 from django.test import TestCase
 from app.models import Item, List
 
-from django.utils.html import escape
+from app.forms import ItemForm
 
 
 class HomePageTest(TestCase):
@@ -11,6 +11,11 @@ class HomePageTest(TestCase):
         "test: home page returns correct html"""
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'home.html')
+
+    def test_home_page_uses_item_form(self):
+        """test: home page uses item form"""
+        response = self.client.get('/')
+        self.assertIsInstance(response.context['form'], ItemForm)
 
 
 class ListViewTest(TestCase):
