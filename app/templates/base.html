@@ -18,7 +18,7 @@
                 <form method="post" action="{% block form_action %}{% endblock %}">
                     <label for="id_new_item"></label>
                     <input name="item_text" id="id_new_item"
-                           class="form-control-sm input-sm w-50 border-info"
+                           class="form-control-lg w-50 border-info"
                            placeholder="Enter a to-do item"/>
                     {% csrf_token %}
                     {% if error %}
