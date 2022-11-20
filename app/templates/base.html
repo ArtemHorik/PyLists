@@ -9,7 +9,7 @@
     <title>To-Do lists</title>
 </head>
 <body class="bg-light">
-<div class="container">
+<div class="container ">
 
     <div class="row my-5">
         <div class="col-lg-8 offset-lg-2 centered text-bg-dark">
@@ -18,9 +18,9 @@
                 <form method="post" action="{% block form_action %}{% endblock %}">
                     {{ form.text }}
                     {% csrf_token %}
-                    {% if error %}
+                    {% if form.errors %}
                         <div class="text-info has-error">
-                        You can't have an empty list item
+                            {{ form.text.errors }}
                         </div>
                     {% endif %}
                 </form>
