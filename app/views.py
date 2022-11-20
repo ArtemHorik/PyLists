@@ -19,8 +19,6 @@ def view_list(request, list_id):
         if form.is_valid():
             Item.objects.create(text=request.POST['text'], list=list_)
             return redirect(list_)
-        else:
-            return render(request, 'list.html', {'form': form})
     return render(request, 'list.html', {'list': list_, 'form': form})
 
 
