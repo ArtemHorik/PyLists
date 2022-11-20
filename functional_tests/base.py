@@ -24,7 +24,7 @@ class FunctionalTest(StaticLiveServerTestCase):
         self.browser.quit()
 
     def create_list_item(self, text):
-        input_box = self.browser.find_element(By.ID, 'id_new_item')
+        input_box = self.get_item_input_box()
         input_box.send_keys(text)
         input_box.send_keys(Keys.ENTER)
 
@@ -52,3 +52,8 @@ class FunctionalTest(StaticLiveServerTestCase):
                 if time.time() - start_time > self.MAX_WAIT:
                     raise e
                 time.sleep(0.5)
+
+    def get_item_input_box(self):
+        """Get item input box"""
+        return self.browser.find_element(By.ID, 'id_text')
+

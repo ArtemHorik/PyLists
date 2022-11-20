@@ -13,28 +13,38 @@ class ItemValidationTest(FunctionalTest):
         """test cannot add empty list items"""
         # we open home page and try to press Enter
         self.browser.get(self.live_server_url)
-        self.create_list_item("")
+        self.get_item_input_box().send_keys(Keys.ENTER)
 
-        # Page refreshes and we get empty list error
-        self.wait_for(lambda: self.assertEqual(
-            self.browser.find_element(By.CSS_SELECTOR, ".has-error").text,
-            "You can't have an empty list item"
+        # Browser don't let us add empty list items
+        # page does not refresh
+        self.wait_for(lambda: self.browser.find_element(
+            By.CSS_SELECTOR, "#id_text:invalid"
         ))
 
-        # now we try it with text entered
-        self.create_list_item("Buy milk")
+        # now we start entering text and error message disappears
+        self.get_item_input_box().send_keys("Buy milk")
+        self.wait_for(lambda: self.browser.find_element(
+            By.CSS_SELECTOR, "#id_text:valid"
+        ))
+
+        # and we can send it
+        self.get_item_input_box().send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table("1: Buy milk")
 
         # now we try to create empty list item again
-        self.create_list_item("")
+        self.get_item_input_box().send_keys(Keys.ENTER)
 
-        # we got same empty list error
-        self.wait_for(lambda: self.assertEqual(
-            self.browser.find_element(By.CSS_SELECTOR, ".has-error").text,
-            "You can't have an empty list item"
+        # and browser still doesn't let us do that
+        self.wait_for_row_in_list_table("1: Buy milk")
+        self.wait_for(lambda: self.browser.find_element(
+            By.CSS_SELECTOR, "#id_text:invalid"
         ))
 
         # but we can fix it by adding some text
-        self.create_list_item("Make tea")
+        self.get_item_input_box().send_keys("Make tea")
+        self.wait_for(lambda: self.browser.find_element(
+            By.CSS_SELECTOR, "#id_text:valid"
+        ))
+        self.get_item_input_box().send_keys(Keys.ENTER)
         self.wait_for_row_in_list_table("1: Buy milk")
         self.wait_for_row_in_list_table("2: Make tea")
