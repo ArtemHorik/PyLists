@@ -31,3 +31,8 @@ def new_list(request):
         return redirect(list_)
     else:
         return render(request, 'home.html', {"form": form})
+
+
+def about(request):
+    """About page"""
+    return render(request, 'about.html')

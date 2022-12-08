@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}">
+    <title>About</title>
+</head>
+<body class="bg-light">
+<header class="heading-text">
+    <nav class="navbar bg-info">
+        <div class="container-fluid m-sm-0 justify-content-center">
+            <a class="small link-dark navbar-brand text-sm-center" href="javascript:history.back()">Go Back</a>
+        </div>
+    </nav>
+</header>
+
+<div class="container text-md-center">
+    <br>
+    <img src="{% static 'lists.png'%}" class="img-fluid w-auto" alt="lists.png">
+    <br>
+    <h5>This is a simple To-Do list app where you can create your own To-Do list.</h5>
+    <br>
+    <p class="">There are at least three reasons why it's a good idea to make a to-do list, whether you end up doing it or not.</p>
+    <ul>
+        <li>
+            <p>First, it makes it easier to remember. Making a to-do list is similar to taking notes as you read a book or listen to a lecture. As you receive information, you process it and then write it down. Many studies have shown that taking notes helps people to better understand and remember information than when they listen to it. That's why you can so easily remember what's written down on your to-do list, even if you don't look at it.</p>
+        </li>
+        <li>
+            <p>Second, planning turns abstract goals into concrete work. Most people set broad, abstract goals that they hope to achieve over a period of time. The problem is that it's difficult to achieve such goals without translating them into a list of concrete activities done daily, weekly, and monthly.</p>
+        </li>
+        <li>
+            <p>Third, a task list helps you identify "weeds" in your work calendar that you haven't noticed before. Once you've written down some tasks, you'll have to find time to do them, perhaps at the expense of something less important. Write to-do lists a few weeks in advance when your work calendar is not yet completely full. Add tasks to it that will help you realize your long-term goals.</p>
+        </li>
+    </ul>
+</div>
+<nav class="navbar">
+    <div class="container-fluid">
+        <a href="mailto: artemhorik11@gmail.com" class="navbar-brand h6 text-decoration-underline" target="_blank">Made by ArtemHorik</a>
+        <a href="https://github.com/ArtemHorik" class="navbar-brand h6 text-decoration-underline" target="_blank">Github</a>
+    </div>
+</nav>
+</body>
