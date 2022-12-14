@@ -9,6 +9,10 @@ from unittest import skip
 class ItemValidationTest(FunctionalTest):
     """Test list item validation"""
 
+    def get_error_element(self):
+        """Returns error element"""
+        return self.browser.find_element(By.CSS_SELECTOR, ".has-error")
+
     def test_cannot_add_empty_list_items(self):
         """test cannot add empty list items"""
         # we open home page and try to press Enter
@@ -61,6 +65,25 @@ class ItemValidationTest(FunctionalTest):
 
         # then we see useful error message
         self.wait_for(lambda: self.assertEqual(
-            self.browser.find_element(By.CSS_SELECTOR, '.has-error').text,
+            self.get_error_element().text,
             "You've already got this in your list"
+        ))
+
+    def test_error_messages_are_cleared_on_input(self):
+        """test: error messages are cleared on input"""
+        # we open home page and trigger validation error
+        self.browser.get(self.live_server_url)
+        self.create_list_item("Learn JS")
+        self.wait_for_row_in_list_table("1: Learn JS")
+        self.create_list_item("Learn JS")
+
+        self.wait_for(lambda: self.assertTrue(
+            self.get_error_element().is_displayed()
+        ))
+        # we start typing to get rid of error
+        self.get_item_input_box().send_keys("c")
+
+        # we see that error disappears
+        self.wait_for(lambda: self.assertFalse(
+            self.get_error_element().is_displayed()
         ))
