@@ -1,4 +1,3 @@
-# ON WORK PyLists
-Django website deployed on AWS with nginx and gunicorn: www.artemhorik.site
+Django website deployed on AWS with nginx and gunicorn
 
 Comes with functional and module tests.
